@@ -119,120 +119,107 @@
         <!--<img src="blue.png" alt="blue background" class="Blue" id="blue">-->
     </div>
     <script>
-        let clicks = 0;
-        let direction = 0;
-        let clickable = 0;
-        let audioPlayed = false;
-        const painting = document.getElementById('painting');
-        const imageContainer = document.querySelector('.image-container');
-        const zoomedImage = document.getElementById('zoomedimage');
-        const noPeople = document.getElementById('nopeople');
-        const Blue = document.getElementById('blue');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const cityAudioPlayer = document.getElementById('cityAudioPlayer');
-        cityAudioPlayer.volume = 0; // Initialize volume at 0 for fade in
-        const fullscreenImage = document.getElementById('fullscreenImage');
-    
-        function fadeOutAudio(audioElement, duration) {
-            const startVolume = audioElement.volume;
-            const decrement = startVolume / (duration / 10); 
-            console.log(`Starting fade out from ${audioElement.volume}`);
-            const fadeOutInterval = setInterval(() => {
-                if (audioElement.volume > 0.01) {
-                    audioElement.volume -= decrement;
-                    console.log(`Fading out... Volume now: ${audioElement.volume}`);
-                } else {
-                    audioElement.volume = 0;
-                    clearInterval(fadeOutInterval);
-                    audioElement.pause();
-                    console.log('Fade out completed and audio paused');
-                }
-            }, 10);
-        }
-    
-        function fadeInAudio(audioElement, duration) {
-            audioElement.play(); 
-            const increment = 1.0 / (duration / 10); 
-            console.log(`Starting fade in to ${audioElement.volume}`);
-            const fadeInInterval = setInterval(() => {
-                if (audioElement.volume < 1.0) {
-                    audioElement.volume += increment;
-                    console.log(`Fading in... Volume now: ${audioElement.volume}`);
-                } 
-                else {
-                    audioElement.volume = 1.0;
-                    clearInterval(fadeInInterval);
-                    console.log('Fade in completed');
-                }
-                if (audioElement.volume>0.98){
-                    audioElement.volume= 1.0;
-                }
-            }, 10);
-        }
-    
-        fullscreenImage.addEventListener('click', () => {
-            fullscreenImage.style.zIndex = -999;
-            fullscreenImage.style.opacity = 0;
-            if (!audioPlayed) {
-                audioPlayer.play();
-                audioPlayer.volume = 1;
-                audioPlayed = true;
-                console.log('Audio played initially');
-                setTimeout(() => {
-                    clickable = 1;
-                }, 500);
+        document.addEventListener('DOMContentLoaded', function() {
+            let clicks = 0;
+            let direction = 0;
+            let clickable = 0;
+            let audioPlayed = false;
+            const painting = document.getElementById('painting');
+            const imageContainer = document.querySelector('.image-container');
+            const zoomedImage = document.getElementById('zoomedimage');
+            const noPeople = document.getElementById('nopeople');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const cityAudioPlayer = document.getElementById('cityAudioPlayer');
+            cityAudioPlayer.volume = 0;
+        
+            function fadeOutAudio(audioElement, duration) {
+                const startVolume = audioElement.volume;
+                const decrement = startVolume / (duration / 10);
+                const fadeOutInterval = setInterval(() => {
+                    if (audioElement.volume > 0.01) {
+                        audioElement.volume -= decrement;
+                    } else {
+                        audioElement.volume = 0;
+                        clearInterval(fadeOutInterval);
+                        audioElement.pause();
+                    }
+                }, 10);
             }
-        });
-    
-        painting.addEventListener('click', () => {
-            console.log(`Painting clicked - Direction: ${direction}, Clicks: ${clicks}, Clickable: ${clickable}`);
-            if (clickable === 1) {
-                if (direction === 0) {
-                    if (clicks === 0) {
-                        clickable = 0;
-                        imageContainer.style.maxWidth = '100%';
-                        setTimeout(() => {
-                            painting.classList.add('shrink');
-                            zoomedImage.classList.add('shrink');
-                            fadeOutAudio(audioPlayer, 5000); 
-                            fadeInAudio(cityAudioPlayer, 5000); 
-                        }, 1000);
-                        clicks++;
-                        setTimeout(() => {
-                            clickable = 1;
-                        }, 11000);
-                    } else if (clicks === 1) {
-                        clickable = 0;
-                        painting.classList.add('morph');
-                        setTimeout(() => {
+        
+            function fadeInAudio(audioElement, duration) {
+                audioElement.play();
+                const increment = 1.0 / (duration / 10);
+                const fadeInInterval = setInterval(() => {
+                    if (audioElement.volume < 1.0) {
+                        audioElement.volume += increment;
+                    } else {
+                        audioElement.volume = 1.0;
+                        clearInterval(fadeInInterval);
+                    }
+                }, 10);
+            }
+        
+            fullscreenImage.addEventListener('click', () => {
+                fullscreenImage.style.zIndex = -999;
+                fullscreenImage.style.opacity = 0;
+                if (!audioPlayed) {
+                    audioPlayer.play();
+                    audioPlayer.volume = 1;
+                    audioPlayed = true;
+                    setTimeout(() => {
+                        clickable = 1;
+                    }, 500);
+                }
+            });
+        
+            painting.addEventListener('click', () => {
+                if (clickable === 1) {
+                    clickable = 0;
+                    if (direction === 0) {
+                        if (clicks === 0) {
+                            imageContainer.style.maxWidth = '100%';
+                            setTimeout(() => {
+                                painting.classList.add('shrink');
+                                zoomedImage.classList.add('shrink');
+                                fadeOutAudio(audioPlayer, 5000);
+                                fadeInAudio(cityAudioPlayer, 5000);
+                                clicks++;
+                                setTimeout(() => {
+                                    clickable = 1;
+                                }, 11000);
+                            }, 1000);
+                        } else if (clicks === 1) {
+                            painting.classList.add('morph');
                             zoomedImage.classList.add('hide2');
-                        noPeople.classList.add('show');
-                        }, 6000);
-                        
-                        setTimeout(() => {
-                            clickable = 1;
-                        }, 1000);
-                        direction=1;
-                    } 
-                } else if (direction === 1) {
-    if (clicks === 1) {
-        painting.classList.remove('morph');  
-        noPeople.classList.remove('show');  
-        zoomedImage.classList.remove('hide2'); 
-        clicks--;
-    }
-    else if (clicks === 0) {
-        imageContainer.style.maxWidth = '55%';
-        painting.classList.remove('shrink'); 
-        zoomedImage.classList.remove('shrink'); 
-        fadeInAudio(audioPlayer, 5000);
-        fadeOutAudio(cityAudioPlayer, 5000);
-        direction = 0; 
-    }
-}
+                            noPeople.classList.add('show');
+                            setTimeout(() => {
+                                direction = 1;
+                                clicks = 0;
+                                clickable = 1;
+                            }, 6000);
+                        }
+                    } else if (direction === 1) {
+                        if (clicks === 1) {
+                            painting.classList.remove('morph');
+                            noPeople.classList.remove('show');
+                            zoomedImage.classList.remove('hide2');
+                            clicks--;
+                        } else if (clicks === 0) {
+                            imageContainer.style.maxWidth = '55%';
+                            painting.classList.remove('shrink');
+                            zoomedImage.classList.remove('shrink');
+                            fadeInAudio(audioPlayer, 5000);
+                            fadeOutAudio(cityAudioPlayer, 5000);
+                            setTimeout(() => {
+                                direction = 0;
+                                clickable = 1;
+                            }, 10000);
+                        }
+                    }
                 }
-            }
+            });
         });
-    </script>
+        </script>
+        
 </body>
 </html>

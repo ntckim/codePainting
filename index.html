@@ -135,10 +135,10 @@
     
         function fadeOutAudio(audioElement, duration) {
             const startVolume = audioElement.volume;
-            const decrement = startVolume / (duration / 10); // Calculate decrement per 10ms
+            const decrement = startVolume / (duration / 10); 
             console.log(`Starting fade out from ${audioElement.volume}`);
             const fadeOutInterval = setInterval(() => {
-                if (audioElement.volume > 0.01) { // Ensure volume can actually reach zero
+                if (audioElement.volume > 0.01) {
                     audioElement.volume -= decrement;
                     console.log(`Fading out... Volume now: ${audioElement.volume}`);
                 } else {
@@ -151,8 +151,8 @@
         }
     
         function fadeInAudio(audioElement, duration) {
-            audioElement.play(); // Ensure the audio is playing
-            const increment = 1.0 / (duration / 10); // Calculate increment per 10ms
+            audioElement.play(); 
+            const increment = 1.0 / (duration / 10); 
             console.log(`Starting fade in to ${audioElement.volume}`);
             const fadeInInterval = setInterval(() => {
                 if (audioElement.volume < 1.0) {
@@ -194,8 +194,8 @@
                         setTimeout(() => {
                             painting.classList.add('shrink');
                             zoomedImage.classList.add('shrink');
-                            fadeOutAudio(audioPlayer, 5000); // Call fade out function for talking.mp3
-                            fadeInAudio(cityAudioPlayer, 5000); // Call fade in function for city.mp3
+                            fadeOutAudio(audioPlayer, 5000); 
+                            fadeInAudio(cityAudioPlayer, 5000); 
                         }, 1000);
                         clicks++;
                         setTimeout(() => {
@@ -216,18 +216,18 @@
                     } 
                 } else if (direction === 1) {
     if (clicks === 1) {
-        painting.classList.remove('morph');  // Correctly use classList here
-        noPeople.classList.remove('show');   // Correctly use classList here
-        zoomedImage.classList.remove('hide2'); // Correctly use classList here
+        painting.classList.remove('morph');  
+        noPeople.classList.remove('show');  
+        zoomedImage.classList.remove('hide2'); 
         clicks--;
     }
     else if (clicks === 0) {
         imageContainer.style.maxWidth = '55%';
-        painting.classList.remove('shrink'); // Correctly use classList here
-        zoomedImage.classList.remove('shrink'); // Correctly use classList here
+        painting.classList.remove('shrink'); 
+        zoomedImage.classList.remove('shrink'); 
         fadeInAudio(audioPlayer, 5000);
         fadeOutAudio(cityAudioPlayer, 5000);
-        direction = 0; // Reset direction to start over
+        direction = 0; 
     }
 }
                 }
